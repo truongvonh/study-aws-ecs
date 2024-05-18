@@ -2,7 +2,7 @@
 # BUILD FOR LOCAL DEVELOPMENT
 ###################
 
-FROM --platform=linux/amd64 node:20-alpine AS development
+FROM --platform=linux/arm64 node:20-alpine AS development
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -23,7 +23,7 @@ USER node
 # BUILD FOR PRODUCTION
 ###################
 
-FROM --platform=linux/amd64 node:20-alpine AS build
+FROM --platform=linux/arm64 node:20-alpine AS build
 
 WORKDIR /usr/src/app
 
