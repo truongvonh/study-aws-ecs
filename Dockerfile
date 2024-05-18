@@ -12,6 +12,9 @@ WORKDIR /usr/src/app
 # Copying this first prevents re-running npm install on every code change.
 COPY --chown=node:node package*.json ./
 
+RUN cat package-lock.json
+
+
 # Install app dependencies using the `npm ci` command instead of `npm install`
 RUN npm ci
 
