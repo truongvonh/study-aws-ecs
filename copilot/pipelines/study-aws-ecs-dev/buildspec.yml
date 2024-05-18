@@ -17,7 +17,7 @@ phases:
       - ls -l
       - export COLOR="false"
       - export CI="true"
-      - pipeline=$(cat $CODEBUILD_SRC_DIR/copilot/pipelines/pipline-test/manifest.yml | ruby -ryaml -rjson -e 'puts JSON.pretty_generate(YAML.load(ARGF))')
+      - pipeline=$(cat $CODEBUILD_SRC_DIR/copilot/pipelines/study-aws-ecs-dev/manifest.yml | ruby -ryaml -rjson -e 'puts JSON.pretty_generate(YAML.load(ARGF))')
       - pl_envs=$(echo $pipeline | jq -r '.stages[].name')
       # Find all the local services in the workspace.
       - svc_ls_result=$(./copilot-linux svc ls --local --json)
@@ -65,4 +65,4 @@ phases:
       - ls -lah ./infrastructure
 artifacts:
   files:
-    - 'infrastructure/*'
+    - "infrastructure/*"
