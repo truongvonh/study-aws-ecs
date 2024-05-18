@@ -2,22 +2,19 @@
 # BUILD FOR LOCAL DEVELOPMENT
 ###################
 
-FROM node:18-alpine AS development
+FROM --platform=linux/amd64 node:20-alpine AS development
 
 # Create app directory
 WORKDIR /usr/src/app
 
 # Copy application dependency manifests to the container image.
-# A wildcard is used to ensure copying both package.json AND package-lock.json (when available).
-# Copying this first prevents re-running npm install on every code change.
-COPY --chown=node:node package*.json ./
 COPY package*.json ./
 
-# Install app dependencies using the `npm ci` command instead of `npm install`
-RUN npm ci
+# Check if package-lock.json exists and install dependencies
+RUN if [ -f package-lock.json ]; then npm ci; else npm install; fi
 
 # Bundle app source
-COPY --chown=node:node . .
+COPY . .
 
 # Use the node user from the image (instead of the root user)
 USER node
@@ -26,18 +23,18 @@ USER node
 # BUILD FOR PRODUCTION
 ###################
 
-FROM node:18-alpine AS build
+FROM --platform=linux/amd64 node:20-alpine AS build
 
 WORKDIR /usr/src/app
 
 # Copy application dependency manifests to the container image.
-COPY --chown=node:node package*.json ./
+COPY package*.json ./
 
 # Copy the node_modules from the development stage
-COPY --chown=node:node --from=development /usr/src/app/node_modules ./node_modules
+COPY --from=development /usr/src/app/node_modules ./node_modules
 
 # Bundle app source
-COPY --chown=node:node . .
+COPY . .
 
 # Run the build command which creates the production bundle
 RUN npm run build
@@ -54,13 +51,13 @@ USER node
 # PRODUCTION
 ###################
 
-FROM node:18-alpine AS production
+FROM --platform=linux/amd64 node:20-alpine AS production
 
 WORKDIR /usr/src/app
 
 # Copy the production node_modules and dist from the build stage
-COPY --chown=node:node --from=build /usr/src/app/node_modules ./node_modules
-COPY --chown=node:node --from=build /usr/src/app/dist ./dist
+COPY --from=build /usr/src/app/node_modules ./node_modules
+COPY --from=build /usr/src/app/dist ./dist
 
 # Use the node user from the image (instead of the root user)
 USER node
