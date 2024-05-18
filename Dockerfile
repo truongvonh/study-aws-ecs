@@ -13,8 +13,6 @@ WORKDIR /usr/src/app
 COPY --chown=node:node package*.json ./
 COPY package*.json ./
 
-RUN cat package-lock.json
-
 # Install app dependencies using the `npm ci` command instead of `npm install`
 RUN npm ci
 
