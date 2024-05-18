@@ -7,6 +7,7 @@ phases:
     commands:
       - echo "cd into $CODEBUILD_SRC_DIR"
       - cd $CODEBUILD_SRC_DIR
+      - node --version
       # Download the copilot linux binary. You can update this version.
       - wget -q https://ecs-cli-v2-release.s3.amazonaws.com/copilot-linux-v1.33.1
       - mv ./copilot-linux-v1.33.1 ./copilot-linux
